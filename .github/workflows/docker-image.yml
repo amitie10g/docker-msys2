@@ -20,12 +20,42 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Build
-        run: cmd /c "docker build --build-arg VERSION=ltsc${{ matrix.version }} -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }} $('-t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}'*(${{ matrix.version }} -eq '2022')) ."
+        shell: cmd
+        run: >
+          docker build
+          --build-arg VERSION=ltsc${{ matrix.version }}
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
+          -t ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
+
+      - name: Tag latest Windows version
+        if: strategy.job-index == 0
+        shell: cmd
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}
+          docker tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }} ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}
+
       - name: Push
+        shell: cmd
         run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }} --all-tags
+
+      - name: Trigger next workflow (docker-msys2-mingw-w64-toolchain)
+        uses: benc-uk/workflow-dispatch@v1
+        with:
+          workflow: docker-image.yml
+          repo: amitie10g/docker-msys2-mingw-w64-toolchain
+          token: ${{ secrets.DOCKER_MSYS2_MINGW_W64_TOOLCHAIN_TOKEN }}
