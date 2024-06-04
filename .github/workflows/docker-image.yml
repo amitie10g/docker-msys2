@@ -41,6 +41,7 @@ jobs:
           --build-arg VERSION=ltsc${{ matrix.version }}
           -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
           -t ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
+          .
 
       - name: Tag latest Windows version
         if: strategy.job-index == 0
