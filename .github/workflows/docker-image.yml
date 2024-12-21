@@ -1,22 +1,26 @@
 name: Publish
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
   schedule: 
-   - cron: '0 12 * * 0'
+   - cron: '0 12 * */1 0'
   workflow_dispatch:
 
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
-        version:
-        - 2022
-        - 2019
-    runs-on: windows-${{ matrix.version }}
+        WIN_VER:
+        - ltsc2025
+        - ltsc2022
+        - ltsc2019
+        - ltsc2016
+        - 20H2
+        - 2009
+        - 2004
+        - 1809
+        - 1803
+    runs-on: windows-2025
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -38,17 +42,17 @@ jobs:
         shell: cmd
         run: >
           docker build
-          --build-arg VERSION=ltsc${{ matrix.version }}
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
-          -t ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }}
+          --build-arg VERSION=${{ matrix.WIN_VER }}
+          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
+          -t ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
           .
 
       - name: Tag latest Windows version
         if: strategy.job-index == 0
         shell: cmd
         run: |
-          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}
-          docker tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:ltsc${{ matrix.version }} ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}
+          docker tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}
 
       - name: Push
         shell: cmd
