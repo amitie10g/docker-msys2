@@ -43,8 +43,9 @@ jobs:
         run: >
           docker build
           --build-arg VERSION=${{ matrix.WIN_VER }}
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
-          -t ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
+          --tag=${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
+          --tag=ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }}
+          --isolation=hyperv
           .
 
       - name: Tag latest Windows version
