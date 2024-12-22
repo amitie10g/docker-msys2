@@ -13,9 +13,9 @@ RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityPro
 
 SHELL ["cmd", "/S", "/C"]
 RUN setx /M path "%PATH%;C:\\msys64\\usr\\local\\bin;C:\\msys64\\usr\\bin;C:\\msys64\\bin;C:\\msys64\\usr\\bin\\site_perl;C:\\msys64\\usr\\bin\\vendor_perl;C:\\msys64\\usr\\bin\\core_perl" && \
-    C:\\msys64\\usr\\bin\\bash -l -c "pacman -Syuu --needed --noconfirm --noprogressbar" && \
-    C:\\msys64\\usr\\bin\\bash -l -c "pacman -Syu --needed --noconfirm --noprogressbar" && \
-    C:\\msys64\\usr\\bin\\bash -l -c "rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*"
+    bash -l -c "pacman -Syuu --needed --noconfirm --noprogressbar" && \
+    bash -l -c "pacman -Syu --needed --noconfirm --noprogressbar" && \
+    bash -l -c "rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*"
 
 RUN mklink /J C:\\msys64\\home\\ContainerUser C:\\Users\\ContainerUser && \
     setx HOME "C:\\msys64\\home\\ContainerUser"
