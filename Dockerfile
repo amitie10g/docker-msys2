@@ -9,10 +9,10 @@ RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityPro
             Select-String -Pattern '.sfx.exe$').ToString(); \
     Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile C:\\windows\\temp\\msys2-base.exe; \
     Start-Process -Wait -FilePath C:\\windows\\temp\\msys2-base.exe -ArgumentList '/SILENT'; \
-    Remove-Item -Path C:\\windows\\temp\\msys2-base.exe; \
-    setx /M path "$env:PATH;C:\\msys64\\usr\\local\\bin;C:\\msys64\\usr\\bin;C:\\msys64\\bin;C:\\msys64\\usr\\bin\\site_perl;C:\\msys64\\usr\\bin\\vendor_perl;C:\\msys64\\usr\\bin\\core_perl"
+    Remove-Item -Path C:\\windows\\temp\\msys2-base.exe;
 
 SHELL ["cmd", "/S", "/C"]
+RUN setx /M path "%PATH%;C:\msys64\usr\local\bin;C:\msys64\usr\bin;C:\msys64\bin;C:\msys64\usr\bin\site_perl;C:\msys64\usr\bin\vendor_perl;C:\msys64\usr\bin\core_perl
 RUN bash -l -c "pacman -Syuu --needed --noconfirm --noprogressbar" && \
     bash -l -c "pacman -Syu --needed --noconfirm --noprogressbar" && \
     bash -l -c "rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*"
