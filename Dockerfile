@@ -9,14 +9,13 @@ RUN powershell -Command "[System.Net.ServicePointManager]::SecurityProtocol = [S
     Invoke-WebRequest -UseBasicParsing -Uri $uri -OutFile C:\\windows\\temp\\msys2-base.exe" && \
 	C:\\windows\\temp\\msys2-base.exe && \
 	del "C:\windows\temp\msys2-base.exe" && \
-    setx /M path "%PATH%;C:\msys64\usr\local\bin;C:\msys64\usr\bin;C:\msys64\bin;C:\msys64\usr\bin\site_perl;C:\msys64\usr\bin\vendor_perl;C:\msys64\usr\bin\core_perl"
+    setx /M path "%PATH%;C:\msys64\usr\local\bin;C:\msys64\usr\bin;C:\msys64\bin;C:\msys64\usr\bin\site_perl;C:\msys64\usr\bin\vendor_perl;C:\msys64\usr\bin\core_perl" && \
+	setx HOME "C:\msys64\home\ContainerUser" && \
+	mklink /J C:\\msys64\\home\\ContainerUser C:\\Users\\ContainerUser
 
 RUN	bash -l -c "pacman -Syuu --needed --noconfirm --noprogressbar" && \
 	bash -l -c "pacman -Syu --needed --noconfirm --noprogressbar" && \
 	bash -l -c "rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*"
 	
-RUN	mklink /J C:\\msys64\\home\\ContainerUser C:\\Users\\ContainerUser && \
-	setx HOME "C:\msys64\home\ContainerUser"
-
 WORKDIR C:\\msys64\\home\\ContainerUser\\
 CMD ["bash", "-l"]
