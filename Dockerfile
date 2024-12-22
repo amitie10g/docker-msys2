@@ -1,4 +1,4 @@
-aARG VERSION=ltsc2022
+ARG VERSION=ltsc2022
 FROM mcr.microsoft.com/windows/servercore:$VERSION
 
 SHELL ["powershell", "-Command", "$ErrorActionPreference = 'Stop'; $ProgressPreference = 'Continue'; $verbosePreference='Continue';"]
