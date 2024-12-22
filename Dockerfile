@@ -12,10 +12,9 @@ RUN [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityPro
     Remove-Item -Path "C:\\windows\\temp\\msys2-base.exe"; \
     setx /M path "%PATH%;C:\\msys64\\usr\\local\\bin;C:\\msys64\\usr\\bin;C:\\msys64\\bin;C:\\msys64\\usr\\bin\\site_perl;C:\\msys64\\usr\\bin\\vendor_perl;C:\\msys64\\usr\\bin\\core_perl"
 
-SHELL ["bash", "-l", "-c"]
-RUN pacman -Syuu --needed --noconfirm --noprogressbar && \
-    pacman -Syu --needed --noconfirm --noprogressbar && \
-    rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*
+RUN	bash -l -c "pacman -Syuu --needed --noconfirm --noprogressbar" && \
+	bash -l -c "pacman -Syu --needed --noconfirm --noprogressbar" && \
+	bash -l -c "rm -fr /C/Users/ContainerUser/* /var/cache/pacman/pkg/*"
 
 SHELL ["cmd", "/S", "/C"]
 RUN mklink /J C:\\msys64\\home\\ContainerUser C:\\Users\\ContainerUser && \
