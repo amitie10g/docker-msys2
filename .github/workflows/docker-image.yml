@@ -14,12 +14,10 @@ jobs:
         - ltsc2025
         - ltsc2022
         - ltsc2019
-        - ltsc2016
         - 20H2
         - 2009
         - 2004
         - 1809
-        - 1803
     runs-on: windows-2025
     steps:
       - name: Checkout
