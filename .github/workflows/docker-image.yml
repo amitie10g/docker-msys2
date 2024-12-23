@@ -11,8 +11,8 @@ jobs:
       fail-fast: false
       matrix:
         WIN_VER:
-        - ltsc2025
         - ltsc2022
+        - ltsc2025
         - ltsc2019
         - 20H2
         - 2009
