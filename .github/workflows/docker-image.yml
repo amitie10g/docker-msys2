@@ -15,7 +15,6 @@ jobs:
         - ltsc2025
         - ltsc2019
         - 20H2
-        - 2009
         - 2004
         - 1809
     runs-on: windows-2025
@@ -52,6 +51,12 @@ jobs:
         run: |
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}
           docker tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}
+
+      - name: Tag same images (20H2 -> 2009)
+        if: ${{ matrix.WIN_VER == '20H2' }}
+        run: |
+          docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} docker tag ${{ secrets.DOCKERHUB_USERNAME }}/${{ vars.IMG_NAME }}:2009
+          docker tag ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:${{ matrix.WIN_VER }} ghcr.io/${{ github.repository_owner }}/${{ vars.IMG_NAME }}:2009
 
       - name: Push
         shell: cmd
