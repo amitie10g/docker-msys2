@@ -13,7 +13,7 @@ jobs:
         WIN_VER:
         - ltsc2022
         - ltsc2025
-        - ltsc2019
+#        - ltsc2019
         - 20H2
         - 2004
         - 1809
