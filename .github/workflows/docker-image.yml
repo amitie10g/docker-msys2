@@ -13,10 +13,8 @@ jobs:
         WIN_VER:
         - ltsc2022
         - ltsc2025
-#        - ltsc2019
         - 20H2
         - 2004
-        - 1809
     runs-on: windows-2025
     steps:
       - name: Checkout
